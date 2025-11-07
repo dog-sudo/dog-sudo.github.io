@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPhone風電話アプリ</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f0f0f0;
+  }
+
+  .phone {
+    width: 300px;
+    height: 500px;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .display {
+    height: 80px;
+    font-size: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+
+  .key {
+    background: #ddd;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .key:active {
+    background: #bbb;
+  }
+
+  .call-btn {
+    margin-top: 20px;
+    background: green;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    padding: 15px;
+    border-radius: 30px;
+    cursor: pointer;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="screen">
+    <div class="display" id="display">---</div>
+    <div class="keypad">
+      <div class="key">1</div>
+      <div class="key">2</div>
+      <div class="key">3</div>
+      <div class="key">4</div>
+      <div class="key">5</div>
+      <div class="key">6</div>
+      <div class="key">7</div>
+      <div class="key">8</div>
+      <div class="key">9</div>
+      <div class="key">*</div>
+      <div class="key">0</div>
+      <div class="key">#</div>
+    </div>
+    <div class="call-btn" id="callBtn">発信</div>
+  </div>
+</div>
+
+<script>
+  const display = document.getElementById("display");
+  const keys = document.querySelectorAll(".key");
+  const callBtn = document.getElementById("callBtn");
+
+  let number = "";
+
+  keys.forEach(key => {
+    key.addEventListener("click", () => {
+      if(number.length < 15){
+        number += key.textContent;
+        display.textContent = number;
+      }
+    });
+  });
+
+  callBtn.addEventListener("click", () => {
+    if(number === "") return;
+    display.textContent = `発信中: ${number}...`;
+
+    // Botによる自動応答（Web Speech API）
+    setTimeout(() => {
+      display.textContent = `通話中: ${number}`;
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = "こんにちは、こちらは自動応答システムです。ご用件をどうぞ。";
+      msg.lang = 'ja-JP';
+      window.speechSynthesis.speak(msg);
+    }, 2000);
+  });
+</script>
+</body>
+</html>
