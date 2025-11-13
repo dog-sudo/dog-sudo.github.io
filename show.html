@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ブラウザアクセスログ</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f0f0f0; }
+    .box { background: white; padding: 1rem 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    h1 { color: #333; }
+    ul { padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>ブラウザアクセスログ</h1>
+    <ul id="logList"></ul>
+  </div>
+
+  <script>
+    // 1. 現在のアクセス情報を作る
+    const logEntry = {
+      time: new Date().toLocaleString(),
+      ua: navigator.userAgent
+    };
+
+    // 2. 既存ログを取得（なければ空配列）
+    const logs = JSON.parse(localStorage.getItem('accessLogs') || '[]');
+
+    // 3. 今回のアクセスを追加
+    logs.push(logEntry);
+
+    // 4. localStorage に保存
+    localStorage.setItem('accessLogs', JSON.stringify(logs));
+
+    // 5. ページに表示
+    const ul = document.getElementById('logList');
+    logs.forEach(entry => {
+      const li = document.createElement('li');
+      li.textContent = `[${entry.time}] User-Agent: ${entry.ua}`;
+      ul.appendChild(li);
+    });
+  </script>
+</body
